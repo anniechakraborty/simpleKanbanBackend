@@ -2,9 +2,13 @@ from app.extensions import mongo
 
 class User:
     @staticmethod
-    def create_user(username, password_hash):
-        user_data = {"username": username, "password_hash": password_hash}
-        print(user_data)
+    def create_user(username, email, password_hash):
+        user_object = {
+            "username": username,
+            "email": email,
+            "password_hash": password_hash
+        }
+        mongo.db.users.insert_one(user_object)
 
     @staticmethod
     def find_by_username(username):
