@@ -1,5 +1,5 @@
 from flask import jsonify
-from app.extensions import bcrypt, jwt_secret_key, db
+from app.config import bcrypt, jwt_secret_key, db
 from app.auth.utils import Message
 import datetime
 import jwt

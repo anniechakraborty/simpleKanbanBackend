@@ -1,24 +1,21 @@
-from app.extensions import mongo
+from app.config import db
 
 class User:
+    collection = db['users']
     @staticmethod
-    def create_user(username, email, password_hash):
-        user_object = {
-            "username": username,
-            "email": email,
-            "password_hash": password_hash
-        }
-        mongo.db.users.insert_one(user_object)
+    def create_user(user_object):
+        User.collection.insert_one(user_object)
 
     @staticmethod
     def find_by_username(username):
-        print(username)
+        User.collection.find({'username': username})
 
 class Task:
+    collection = db['tasks']
     @staticmethod
-    def create_task(title, description, user_id):
-        task_data = {"title": title, "description": description, "user_id": user_id}
+    def create_task(task_data):
         print(task_data)
+        Task.collection.insert_one(task_data)
 
     @staticmethod
     def get_tasks_by_user(user_id):
