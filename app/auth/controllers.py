@@ -1,6 +1,6 @@
 from flask import jsonify
 from app.config import bcrypt, jwt_secret_key, db
-from app.auth.utils import Message
+from app.auth.utils import Message, TokenManagement
 import datetime
 import jwt
 
@@ -45,11 +45,13 @@ def register_user(data):
         "created_at": datetime.datetime.now()
     }
     result = usersCollection.insert_one(user_object)
-    print('USERS REGISTERED ! ', result)
+    access_token = TokenManagement.generate_access_token(str(result.inserted_id))
+    print('USERS REGISTERED ! ', result.inserted_id)
     response = {
         'message': Message.USER_REGISTERED,
-        'data': 1,
-        'status': 200
+        'token': access_token,
+        'status': 200,
+        'username': username
     }
     return response
 
@@ -58,6 +60,8 @@ def login_user(data):
     password = data.get('password')
 
     user = usersCollection.find_one({"email": email})
+    print('USERS found ! ', user)
+    print(str(user['_id']))
     
     if not user or not bcrypt.check_password_hash(user['password_hash'], password):
         response = {
@@ -67,18 +71,13 @@ def login_user(data):
         return response
     
     # Generate a JWT token
-    jwt_payload = {
-        'user_id': str(user['_id']),
-        'exp': datetime.datetime.now() + datetime.timedelta(days=1)
-    }
-    jwt_algorithm = "HS256"
-    access_token = jwt.encode(jwt_payload, jwt_secret_key, algorithm=jwt_algorithm)
-
+    access_token = TokenManagement.generate_access_token(str(user['_id']))
     # access_token = create_access_token(identity=str(user['_id']), expires_delta=datetime.timedelta(hours=24))
     response = {
         'message': Message.USER_LOGGED_IN,
-        'access_token': access_token,
-        'status': 200
+        'token': access_token,
+        'status': 200,
+        'username': user['username']
     }
     return response
 
