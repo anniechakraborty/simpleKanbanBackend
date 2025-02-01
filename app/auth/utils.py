@@ -8,9 +8,12 @@ class Message:
     INVALID_DETAILS = 'Invalid username or password!'
 
     MISSING_DETAILS = 'Username, email and password required'
+    MISSING_TOKEN = 'Authentication is required!'
+    
     USER_NOT_FOUND = 'User not found!'
-    USER_FOUND = 'User exists!'
+    USER_UNAUTHENTICATED = 'User is not authorized!'
 
+    USER_FOUND = 'User exists!'
     USER_REGISTERED = 'User registered successfully!'
     USER_LOGGED_IN = 'User logged in successfully!'
     USER_LOGGED_OUT = 'User logged out successfully!'
