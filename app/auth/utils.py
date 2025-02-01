@@ -8,10 +8,15 @@ class Message:
     INVALID_DETAILS = 'Invalid username or password!'
 
     MISSING_DETAILS = 'Username, email and password required'
+    USER_NOT_FOUND = 'User not found!'
+    USER_FOUND = 'User exists!'
 
     USER_REGISTERED = 'User registered successfully!'
     USER_LOGGED_IN = 'User logged in successfully!'
     USER_LOGGED_OUT = 'User logged out successfully!'
+
+    TOKEN_EXPIRED = 'Token has expired!'
+    TOKEN_INVALID = 'Token is invalid!'
 
 class TokenManagement:
     def generate_access_token(identity):
@@ -21,3 +26,16 @@ class TokenManagement:
         }
         jwt_algorithm = "HS256"
         return jwt.encode(jwt_payload, jwt_secret_key, algorithm=jwt_algorithm)
+    
+    def decode_token(token):
+        return jwt.decode(token, jwt_secret_key, algorithms=['HS256'])
+    
+    def validate_token(token):
+        try:
+            payload = jwt.decode(token, jwt_secret_key, algorithms=['HS256'])
+            return payload
+        except jwt.ExpiredSignatureError:
+            return Message.TOKEN_EXPIRED
+        except jwt.InvalidTokenError:
+            return Message.TOKEN_INVALID
+            

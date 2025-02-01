@@ -2,6 +2,7 @@ from flask import jsonify
 from app.config import bcrypt, jwt_secret_key, db
 from app.auth.utils import Message, TokenManagement
 import datetime
+from bson import ObjectId
 import jwt
 
 # Mongo connection established
@@ -60,9 +61,7 @@ def login_user(data):
     password = data.get('password')
 
     user = usersCollection.find_one({"email": email})
-    print('USERS found ! ', user)
-    print(str(user['_id']))
-    
+        
     if not user or not bcrypt.check_password_hash(user['password_hash'], password):
         response = {
             'error': Message.INVALID_DETAILS,
@@ -81,11 +80,22 @@ def login_user(data):
     }
     return response
 
-def validate_token(token):
-    try:
-        payload = jwt.decode(token, jwt_secret_key, algorithms=['HS256'])
-        return payload
-    except jwt.ExpiredSignatureError:
-        return "Token has expired"
-    except jwt.InvalidTokenError:
-        return "Invalid token"
+def get_current_user(token):
+    user_obj = TokenManagement.decode_token(token)
+    
+    user = usersCollection.find_one({"_id": ObjectId(user_obj['user_id'])})
+
+    if not user:
+        response = {
+            "error": Message.USER_NOT_FOUND,
+            "status": 404
+        }
+        return response
+
+    response = {
+        'message': Message.USER_FOUND,
+        'token': token,
+        "status": 200,
+        "username": user["username"],
+    }
+    return response
