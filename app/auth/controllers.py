@@ -17,7 +17,7 @@ class UserController:
         # Checking for blank fields and exisiting users
         if not username or not password or not email:
             response = {
-                'error': Message.MISSING_DETAILS,
+                'message': Message.MISSING_DETAILS,
                 'status': 400
             }
             return response
@@ -25,7 +25,7 @@ class UserController:
         existing_user = usersCollection.find_one({"username": username})
         if existing_user:
             response = {
-                'error': Message.DUPLICATE_USER,
+                'message': Message.DUPLICATE_USER,
                 'status': 400
             }
             return response
@@ -33,7 +33,7 @@ class UserController:
         exisitng_email = usersCollection.find_one({"email": email})
         if exisitng_email:
             response = {
-                'error': Message.DUPLICATE_EMAIL,
+                'message': Message.DUPLICATE_EMAIL,
                 'status': 400
             }
             return response
@@ -65,7 +65,7 @@ class UserController:
             
         if not user or not bcrypt.check_password_hash(user['password_hash'], password):
             response = {
-                'error': Message.INVALID_DETAILS,
+                'message': Message.INVALID_DETAILS,
                 'status': 401
             }
             return response
@@ -88,7 +88,7 @@ class UserController:
 
         if not user:
             response = {
-                "error": Message.USER_NOT_FOUND,
+                "message": Message.USER_NOT_FOUND,
                 "status": 404
             }
             return response
