@@ -28,9 +28,11 @@ def get_task(logged_in_user, task_id):
 @tasks_bp.route('/<string:task_id>', methods=['PUT'])
 @authorized
 def update_existing_task(logged_in_user, task_id):
-    print('Update existing task')
+    res = TaskController.update_task(logged_in_user, task_id, request.get_json())
+    return res
 
 @tasks_bp.route('/<string:task_id>', methods=['DELETE'])
 @authorized
 def delete_existing_task(logged_in_user, task_id):
-    print('Delete task')
+    res = TaskController.delete_task(logged_in_user, task_id)
+    return res

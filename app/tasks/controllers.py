@@ -66,12 +66,13 @@ class TaskController:
             return {'message': str(e), 'status': 500}
     
     def update_task(user, task_id, data):
-        print(user, task_id, data)
+        print('Updating task : ', data)
         try:
             updated_task = tasksCollection.update_one(
                 {'_id': ObjectId(task_id), 'created_by': user['username']}, 
                 {'$set': data}
             )
+            print('Updated task : ', updated_task)
             if updated_task.modified_count > 0:
                 return {
                     'message': Message.UPDATE_TASK,
@@ -86,9 +87,9 @@ class TaskController:
             return {'message': str(e), 'status': 500}
     
     def delete_task(user, task_id):
-        print(user, task_id)
         try:
             deleted_task = tasksCollection.delete_one({'_id': ObjectId(task_id), 'created_by': user['username']})
+            print('Deleted task : ', deleted_task)
             if deleted_task.deleted_count > 0:
                 return {
                     'message': Message.DELETE_TASK,
