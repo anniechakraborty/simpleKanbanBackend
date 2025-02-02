@@ -16,13 +16,16 @@ class TaskController:
         try:
             result = tasksCollection.insert_one(task_obj)
             if result:
+                print('Task created : ', str(result.inserted_id))
                 return {
                     'message': Message.CREATE_TASK, 
-                    'taskId': str(result.inserted_id),
                     'status': 200
                 }
             else:
-                return {'message': Message.ERROR_IN_CREATE_TASK, 'status': 500}
+                return {
+                    'message': Message.ERROR_IN_CREATE_TASK, 
+                    'status': 500
+                }
         except Exception as e:
             return {'message': str(e), 'status': 500}
 
@@ -53,6 +56,7 @@ class TaskController:
             if task:
                 task['_id'] = str(task['_id'])
                 return {
+                    'message': Message.GET_TASK,
                     'task': task,
                     'status': 200
                 }
