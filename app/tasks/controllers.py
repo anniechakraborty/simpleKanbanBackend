@@ -6,7 +6,6 @@ from app.tasks.utils import Message
 tasksCollection = db['tasks']
 class TaskController:
     def create_task(data, user):
-        print(data)
         task_obj = {
             'title': data['title'],
             'description': data['description'],
@@ -51,8 +50,6 @@ class TaskController:
     def get_task_by_id(user, task_id):
         try:
             task = tasksCollection.find_one({'_id': ObjectId(task_id), 'created_by': user['username']})
-            print(task)
-            print(type(task))
             if task:
                 task['_id'] = str(task['_id'])
                 return {
