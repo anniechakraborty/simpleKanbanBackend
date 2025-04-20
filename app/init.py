@@ -6,7 +6,7 @@ from app.tasks.routes import tasks_bp
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}}, origins=["https://simple-kanban-board-app.netlify.app"])
 
     # Initialize extensions
     bcrypt.init_app(app)
